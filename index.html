@@ -1,0 +1,140 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <meta name="author" content="Christopher Cordisco, Kimberly Tobias" />
+
+    <title>Rubix Cube Animator</title>
+    
+    <link rel="stylesheet" href="main.css" type="text/css" media="screen" />
+    
+    <!-- Shaders -->
+    
+    <script id="vertex-shader" type="x-shader/x-vertex">
+        attribute vec4 vPosition;
+        attribute vec4 vColor;
+        attribute vec3 vNormal;
+        
+        varying vec4 color;
+        
+        uniform mat4 projection; // Projection matrix
+        uniform mat4 modelView;  // Model-view matrix
+        
+        uniform vec4 lightPositionFirst, lightPositionSecond, lightAmbient, lightDiffuse, lightSpecular;
+        uniform vec4 materialAmbient, materialSpecular;
+        
+        void main() 
+        {
+            vec3 pos = -(modelView * vPosition).xyz;
+            vec3 lightOne = lightPositionFirst.xyz;
+            vec3 lightTwo = lightPositionSecond.xyz;
+            vec3 L1 = normalize(lightOne - pos);
+            vec3 L2 = normalize(lightTwo - pos);
+            
+            vec3 E = normalize(-pos);
+            vec3 H1 = normalize(L1 + E);
+            vec3 H2 = normalize(L2 + E);
+            
+            vec4 NN = vec4(vNormal, 0);
+            
+            vec3 N = normalize((modelView * NN).xyz);
+            
+            // Compute terms in the illumination equation
+            vec4 ambient = lightAmbient * materialAmbient;
+            
+            float Kd1 = max(dot(L1, N), 0.0);
+            float Kd2 = max(dot(L2, N), 0.0);
+            vec4 diffuseProduct = lightDiffuse * vColor;
+            vec4 diffuse1 = Kd1 * diffuseProduct;
+            vec4 diffuse2 = Kd2 * diffuseProduct;
+            
+            float Ks1 = pow(max(dot(N, H1), 0.0), 100.0);
+            float Ks2 = pow(max(dot(N, H2), 0.0), 100.0);
+            vec4 specularProduct = lightSpecular * materialSpecular;
+            vec4 specular1 = Ks1 * specularProduct;
+            vec4 specular2 = Ks2 * specularProduct;
+            
+            if (dot(L1, N) < 0.0) {
+                specular1 = vec4(0.0, 0.0, 0.0, 1.0);
+            }
+            if (dot(L2, N) < 0.0) {
+                specular2 = vec4(0.0, 0.0, 0.0, 1.0);
+            }
+            
+            color = ambient + diffuse1 + diffuse2 + specular1 + specular2;
+            color.a = 1.0;
+            gl_Position = projection * modelView * vPosition;
+        }
+    </script>
+    
+    <script id="fragment-shader" type="x-shader/x-fragment">
+        #ifdef GL_ES
+        precision highp float;
+        #endif
+        
+        varying vec4 color;
+        
+        void main()
+        {
+            gl_FragColor = color;
+        }
+    </script>
+    
+    <!-- Scripts -->
+    
+    <script type="text/javascript" src="common/webgl-utils.js"></script>
+    <script type="text/javascript" src="common/initShaders.js"></script>
+    <script type="text/javascript" src="common/MV.js"></script>
+    
+    <script type="text/javascript" src="rubix/control.js"></script>
+    <script type="text/javascript" src="rubix/controlInterface.js"></script>
+    <script type="text/javascript" src="rubix/cube.js"></script>
+    <script type="text/javascript" src="rubix/rubix.js"></script>
+</head>
+<body>
+<div id="banner">
+    <span class="banner-title">Rubik's Animator</span><br>
+    <span class="banner-subtitle">By Christopher Cordisco &amp; Kimberly Tobias</span>
+</div>
+<div id="main-content">
+    <div id="side-bar">
+        <div class="side-component">
+            Drag the mouse to rotate the cube.
+        </div>
+        <div class="side-divider"></div>
+        
+        <div class="side-component">Initial State</div>
+        <textarea id="state-text" class="drop-interface" placeholder="Drop state file or paste text here..."></textarea>
+        <button id="state-button">Load</button>
+        <div class="side-divider"></div>
+        
+        <div class="side-component">Solution</div>
+        <textarea id="solution-text" class="drop-interface" placeholder="Drop solution file or paste text here..."></textarea>
+        <button id="solution-button">Play</button>
+        <div class="side-divider"></div>
+        
+        <button id="state-sample-button">Load Sample</button>
+        <button id="solution-sample-button">Play Sample Solution</button>
+
+        <div class="side-divider"></div>
+        <div class="side-component">
+            Supported 
+            <img class="icons" src="resources/chrome16.png"> 31 | 
+            <img class="icons" src="resources/ie16.png"> 11
+            <br>
+        </div>
+        <div class="side-component">
+            Unsupported 
+            <img class="icons" src="resources/ff16.png"> 25
+        </div>
+
+    </div>
+    <div id="canvas-container">
+        <canvas id="gl-canvas" width="750" height="562.5">
+            Canvas element unsupported.
+        </canvas>
+        <div id="github-repo"><a href="https://github.com/cdcor/rubix_animator" target="_blank"></a></div>
+    </div>
+</div>
+</body>
+</html>

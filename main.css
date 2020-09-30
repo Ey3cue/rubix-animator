@@ -1,0 +1,122 @@
+
+body {
+    background: url(resources/background.png);
+    font: 10pt Tahoma;
+    color: #EEE;
+}
+
+#banner {
+    margin: 10px auto;
+    padding: 10px;
+    width: 1025px;
+    height: 100px;
+    background-color: black;
+    border: 2px solid #666;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.banner-title {
+    font-size: 48pt;
+}
+
+.banner-subtitle {
+    font-size: 10pt;
+}
+
+#main-content {
+	margin: auto;
+	width: 1050px;
+}
+
+#main-content > * {
+    float: left;
+}
+
+#side-bar {
+    margin-right: 10px;
+    padding: 10px;
+    width: 232px;
+	height: 570px;
+	background-color: black;
+	border: 2px solid #666;
+	border-radius: 10px;
+}
+
+#side-bar textarea {
+    margin: 4px 8px;
+    padding: 5px;
+    width: 199px;
+    background-color: black;
+    border: 2px solid #999;
+    color: #EEE;
+    text-align: center;
+}
+
+#state-text {
+    height: 180px;
+}
+
+#side-bar button {
+    display: block;
+    margin: 3px 6px;
+    padding: 2px;
+    width: 216px;
+}
+
+.side-component {
+    margin: 4px 8px;
+    width: 90.5%;
+}
+
+.side-divider {
+    display: block;
+    margin: 10px 4px;
+    width: 223px;
+    height: 2px;
+    background-color: #666;
+}
+
+.icons {
+    vertical-align: text-bottom;
+}
+
+.drop-interface {
+    margin: 4px 8px;
+    border: 2px solid #999;
+    text-align: center;
+}
+
+.drop-interface-hover {
+    background-color: green !important;
+}
+
+#canvas-container {
+    position: relative;
+	padding: 10px;
+	width: 760px;
+	height: 570px;
+	background-color: black;
+	border: 2px solid #666;
+	border-radius: 10px;
+	text-align: center;
+}
+
+#gl-canvas {
+    cursor: move;
+}
+
+#github-repo {
+    position: absolute;
+    bottom: 10px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
+    background: url(resources/github32.png);
+}
+
+#github-repo a {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
